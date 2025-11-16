@@ -12,7 +12,7 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="w-full flex flex-col md:flex-row justify-between items-center gap-6 py-12 px-6 md:px-0 glass-panel border-t border-white/20">
+      <footer className="w-full flex flex-col md:flex-row justify-between items-center gap-6 py-12 px-8 md:px-0 glass-panel border-t border-white/20">
       <div className="text-2xl font-london text-white">hacktua</div>
 
       <div className="flex gap-8 text-sm text-white/60">
@@ -31,6 +31,7 @@ export default function Footer() {
         © 2025 hacktua. built with caffeine and code.
       </div>
     </footer>
+
 
       {/* Snackbar */}
       <AnimatePresence>

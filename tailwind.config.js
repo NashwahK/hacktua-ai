@@ -1,9 +1,8 @@
-// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/app/**/*.{js,ts,jsx,tsx}",
-    "./src/app/components/**/*.{js,ts,jsx,tsx}"
+    "./app/**/*.{js,ts,jsx,tsx}",          // all pages/components in app
+    "./app/components/**/*.{js,ts,jsx,tsx}" // all components
   ],
   theme: {
     extend: {
@@ -17,14 +16,14 @@ module.exports = {
       },
       fontFamily: {
         london: ["Londoners", "serif"],
-        poppins: ["var(--font-poppins)", "sans-serif"],
+        poppins: ['var(--font-poppins)', 'sans-serif'],
       },
       borderRadius: {
-        "glass": "2rem",
+        glass: "2rem",
       },
       boxShadow: {
-        "glass": "0 4px 30px rgba(0,0,0,0.1)",
-      }
+        glass: "0 4px 30px rgba(0,0,0,0.1)",
+      },
     },
   },
   plugins: [],
