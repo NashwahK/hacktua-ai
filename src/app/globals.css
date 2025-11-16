@@ -1,26 +1,49 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Optional: Londoners font */
+@font-face {
+  font-family: 'Londoners';
+  src: url('/fonts/Londoners.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply font-poppins;
+  background-image: url('/assets/web-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* globals.css */
+.scrollbar-thin {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #7BADE2 #EBF5FF; 
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px; /* Chrome, Edge */
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #EBF5FF;
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #7BADE2;
+  border-radius: 9999px;
+  border: 2px solid #EBF5FF;
 }
