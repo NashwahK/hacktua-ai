@@ -1,2 +1,2 @@
-## hacktua
-# psych tech for all :))
+# hacktua
+## psych tech for all :))
