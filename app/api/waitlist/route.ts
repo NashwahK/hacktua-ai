@@ -15,22 +15,20 @@ export async function POST(req: Request) {
     const { email } = await req.json();
 
     if (!email) {
-      return NextResponse.json(
-        { success: false, message: "don't leave me aloone :/" },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: "Email required" }, { status: 400 });
     }
-    const { error: dbError } = await supabase
-      .from("waitlist")
-      .insert({ email });
+
+    console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+    console.log("Supabase key:", process.env.SUPABASE_SERVICE_ROLE_KEY ? "set" : "missing");
+    console.log("Resend key:", process.env.RESEND_API_KEY ? "set" : "missing");
+
+    const { error: dbError } = await supabase.from("waitlist").insert({ email });
 
     if (dbError) {
       console.error("Supabase insert error:", dbError);
-      return NextResponse.json(
-        { success: false, message: "Database error" },
-        { status: 500 }
-      );
+      return NextResponse.json({ success: false, message: "Database error" }, { status: 500 });
     }
+
     await resend.emails.send({
       from: "Hacktua <onboarding@resend.dev>",
       to: "hacktua.ai@gmail.com",
@@ -40,10 +38,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { success: false, message: String(error) },
-      { status: 500 }
-    );
+    console.error("Caught API error:", error);
+    return NextResponse.json({ success: false, message: String(error) }, { status: 500 });
   }
 }
