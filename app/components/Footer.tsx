@@ -1,39 +1,39 @@
-"use client";
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+'use client';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Footer() {
-  const [snackbar, setSnackbar] = useState<{ msg: string; type: "info" } | null>(null);
+  const [snackbar, setSnackbar] = useState<{ msg: string; type: 'info' } | null>(null);
 
   const showSnackbar = (msg: string) => {
-    setSnackbar({ msg, type: "info" });
+    setSnackbar({ msg, type: 'info' });
     setTimeout(() => setSnackbar(null), 4000);
   };
 
   return (
     <>
-      <footer className="w-full flex flex-col md:flex-row justify-between items-center gap-6 py-12 px-8 md:px-0 glass-panel border-t border-white/20">
-      <div className="text-2xl font-london text-white">hacktua</div>
+      <footer className="w-full py-12 glass-panel-footer border-t border-white/20">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 w-full max-w-[1440px] mx-auto px-6 md:px-0">
+          <div className="text-2xl font-london text-white">hacktua</div>
 
-      <div className="flex gap-8 text-sm text-white/60">
-        {["privacy", "terms", "contact"].map((link) => (
-          <button
-            key={link}
-            onClick={() => showSnackbar("road work ahead? let's hope it does...")}
-            className="hover:text-white transition-colors"
-          >
-            {link}
-          </button>
-        ))}
-      </div>
+          <div className="flex gap-8 text-sm text-white/60">
+            {['privacy', 'terms', 'contact'].map((link) => (
+              <button
+                key={link}
+                onClick={() => showSnackbar("road work ahead? let's hope it does...")}
+                className="hover:text-white transition-colors"
+              >
+                {link}
+              </button>
+            ))}
+          </div>
 
-      <div className="text-white/40 text-sm text-center md:text-right">
-        © 2025 hacktua. built with caffeine and code.
-      </div>
-    </footer>
+          <div className="text-white/40 text-sm text-center md:text-right">
+            © 2025 hacktua. built with caffeine and code.
+          </div>
+        </div>
+      </footer>
 
-
-      {/* Snackbar */}
       <AnimatePresence>
         {snackbar && (
           <motion.div

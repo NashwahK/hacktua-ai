@@ -24,9 +24,17 @@ body {
   backdrop-filter: blur(15px);
   border-radius: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  
+}
+.glass-panel-footer {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border-top-left-radius: 2rem;
+  border-top-right-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
 }
 
-/* globals.css */
 .scrollbar-thin {
   scrollbar-width: thin; /* Firefox */
   scrollbar-color: #7BADE2 #EBF5FF; 
