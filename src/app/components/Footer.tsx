@@ -12,29 +12,25 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="w-full py-12 px-4 flex flex-col md:flex-row justify-between items-center gap-6 glass-panel border-t border-white/20">
+      <footer className="w-full flex flex-col md:flex-row justify-between items-center gap-6 py-12 px-6 md:px-0 glass-panel border-t border-white/20">
+      <div className="text-2xl font-london text-white">hacktua</div>
 
-        {/* Logo */}
-        <div className="text-2xl font-london text-white">Hacktua</div>
+      <div className="flex gap-8 text-sm text-white/60">
+        {["privacy", "terms", "contact"].map((link) => (
+          <button
+            key={link}
+            onClick={() => showSnackbar("road work ahead? let's hope it does...")}
+            className="hover:text-white transition-colors"
+          >
+            {link}
+          </button>
+        ))}
+      </div>
 
-        {/* Links */}
-        <div className="flex gap-8 text-sm text-white/60">
-          {["Privacy", "Terms", "Contact"].map((link) => (
-            <button
-              key={link}
-              onClick={() => showSnackbar("road work ahead? let's hope it does...")}
-              className="hover:text-white transition-colors"
-            >
-              {link}
-            </button>
-          ))}
-        </div>
-
-        {/* Copyright */}
-        <div className="text-white/40 text-sm text-center md:text-right">
-          © 2025 hacktua. built with caffeine and code. 
-        </div>
-      </footer>
+      <div className="text-white/40 text-sm text-center md:text-right">
+        © 2025 hacktua. built with caffeine and code.
+      </div>
+    </footer>
 
       {/* Snackbar */}
       <AnimatePresence>
