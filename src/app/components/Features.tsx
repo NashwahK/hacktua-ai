@@ -36,7 +36,7 @@ export default function Features() {
         Features
       </h2>
 
-      <div className="flex flex-col md:flex-row gap-6 w-full justify-center">
+      <div className="flex flex-col md:flex-row gap-6 max-w-6xl w-full mx-auto justify-center">
         {features.map((feature, idx) => (
           <motion.div
             key={feature.title}

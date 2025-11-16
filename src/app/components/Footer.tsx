@@ -12,7 +12,7 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="w-full px-6 sm:px-20 md:px-32 py-12 flex flex-col md:flex-row justify-between items-center gap-6 glass-panel border-t border-white/20">
+      <footer className="w-full py-12 px-4 flex flex-col md:flex-row justify-between items-center gap-6 glass-panel border-t border-white/20">
 
         {/* Logo */}
         <div className="text-2xl font-london text-white">Hacktua</div>
