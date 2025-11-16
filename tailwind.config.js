@@ -17,7 +17,7 @@ module.exports = {
       },
       fontFamily: {
         london: ["Londoners", "serif"],
-        poppins: ["Poppins", "sans-serif"],
+        poppins: ["var(--font-poppins)", "sans-serif"],
       },
       borderRadius: {
         "glass": "2rem",
