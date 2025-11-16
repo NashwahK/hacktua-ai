@@ -23,6 +23,7 @@ export default function CTA() {
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
