@@ -17,11 +17,6 @@ export async function POST(req: Request) {
     if (!email) {
       return NextResponse.json({ success: false, message: "Email required" }, { status: 400 });
     }
-
-    console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-    console.log("Supabase key:", process.env.SUPABASE_SERVICE_ROLE_KEY ? "set" : "missing");
-    console.log("Resend key:", process.env.RESEND_API_KEY ? "set" : "missing");
-
     const { error: dbError } = await supabase.from("waitlist").insert({ email });
 
     if (dbError) {
