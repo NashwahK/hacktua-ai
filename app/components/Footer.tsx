@@ -12,8 +12,8 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="w-full py-12 glass-panel-footer border-t border-white/20">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 w-full max-w-[1440px] mx-auto px-6 md:px-0">
+      <footer className="w-full py-12 glass-panel-footer border-t border-white/20 md:ml-72">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 w-full max-w-[1440px] mx-auto px-6 md:px-12">
           <div className="text-2xl font-london text-white">hacktua</div>
 
           <div className="flex gap-8 text-sm text-white/60">

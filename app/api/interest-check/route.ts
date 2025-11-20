@@ -12,27 +12,37 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
+    const body = await req.json();
     const {
       email,
       willing_conversation,
       bothering_you,
-      affecting_daily_life,
-      better_or_worse,
       consent,
-    } = await req.json();
+      detectedKeyword, // This is an array
+      ...dynamicResponses
+    } = body;
 
+    // Validate required fields
     if (typeof willing_conversation !== "boolean" || typeof consent !== "boolean") {
       return NextResponse.json({ success: false, message: "Invalid input" }, { status: 400 });
     }
+
+    // Convert detectedKeyword array to comma-separated string
+    const keywordString = Array.isArray(detectedKeyword) && detectedKeyword.length > 0 
+      ? detectedKeyword.join(", ") 
+      : null;
+
+    // Insert into Supabase
     const { error: dbError } = await supabase
       .from("interest_check_responses")
       .insert({
         email,
         willing_conversation,
         bothering_you,
-        affecting_daily_life,
-        better_or_worse,
         consent,
+        detected_keyword: keywordString,
+        responses: dynamicResponses, // Store all keyword-specific responses as JSONB
+        created_at: new Date().toISOString(),
       });
 
     if (dbError) {
@@ -40,18 +50,55 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, message: "Database error" }, { status: 500 });
     }
 
+    // Build dynamic HTML for email based on responses
+    let dynamicQuestionsHtml = "";
+    if (Array.isArray(detectedKeyword) && detectedKeyword.length > 0) {
+      dynamicQuestionsHtml = `
+        <h3>Detected Issues: ${detectedKeyword.map(k => k.toUpperCase()).join(", ")}</h3>
+        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 10px 0;">
+      `;
+      
+      for (const [key, value] of Object.entries(dynamicResponses)) {
+        const formattedKey = key
+          .replace(/_/g, ' ')
+          .replace(/\b\w/g, l => l.toUpperCase());
+        const formattedValue = typeof value === 'boolean' 
+          ? (value ? 'Yes' : 'No') 
+          : value || 'N/A';
+        
+        dynamicQuestionsHtml += `
+          <p><strong>${formattedKey}:</strong> ${formattedValue}</p>
+        `;
+      }
+      
+      dynamicQuestionsHtml += `</div>`;
+    }
+
+    // Send email notification
     await resend.emails.send({
       from: "Hacktua <onboarding@resend.dev>",
       to: "hacktua.ai@gmail.com",
-      subject: "New Interest Check Submission",
+      subject: `New Interest Check: ${Array.isArray(detectedKeyword) && detectedKeyword.length > 0 ? detectedKeyword.map(k => k.toUpperCase()).join(", ") : 'General'}`,
       html: `
-        <h2>Interest Check Response</h2>
-        <p><strong>Email:</strong> ${email || "N/A"}</p>
-        <p><strong>Willing Conversation:</strong> ${willing_conversation}</p>
-        <p><strong>Bothering you:</strong> ${bothering_you}</p>
-        <p><strong>Affecting daily life:</strong> ${affecting_daily_life}</p>
-        <p><strong>Better/Worse:</strong> ${better_or_worse}</p>
-        <p><strong>Consent:</strong> ${consent}</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #336699;">Interest Check Response</h2>
+          
+          <div style="background: #EBF5FF; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <p><strong>Email:</strong> ${email || "N/A"}</p>
+            <p><strong>Willing to have conversation:</strong> ${willing_conversation ? 'Yes' : 'No'}</p>
+            <p><strong>What's bothering them:</strong> ${bothering_you || "N/A"}</p>
+          </div>
+
+          ${dynamicQuestionsHtml}
+
+          <div style="background: #C5DCF1; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <p><strong>Consent to store & relay:</strong> ${consent ? 'Yes' : 'No'}</p>
+          </div>
+
+          <p style="color: #666; font-size: 12px; margin-top: 30px;">
+            Submitted at: ${new Date().toLocaleString()}
+          </p>
+        </div>
       `,
     });
 
