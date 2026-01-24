@@ -53,11 +53,11 @@ export default function Sidebar() {
               </a>
             ))}
             <Link href="/interest-check" className="text-white/40 transition-colors hover:text-[#7BADE2]">
-              interest check
+              proof of concept
             </Link>
           </nav>
         </div>
-        <div className="text-white/20 text-[10px] tracking-[0.3em] lowercase">&copy; 2025 hacktua</div>
+        <div className="text-white/20 text-[10px] tracking-[0.3em] lowercase">&copy; 2026 hacktua</div>
       </aside>
 
       {/* Modern Floating Mobile Navbar */}
@@ -104,7 +104,7 @@ export default function Sidebar() {
             onClick={() => setMenuOpen(false)}
             className="text-3xl font-london lowercase tracking-tighter text-white/60 pt-4 border-t border-white/10 w-40 text-center"
           >
-            interest check
+            proof of concept
           </Link>
         </div>
       </div>

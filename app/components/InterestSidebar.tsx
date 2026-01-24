@@ -70,7 +70,7 @@ export default function InterestSidebar() {
             </Link>
           </nav>
         </div>
-        <div className="text-white/20 text-[10px] tracking-[0.3em] lowercase">&copy; 2025 hacktua</div>
+        <div className="text-white/20 text-[10px] tracking-[0.3em] lowercase">&copy; 2026 hacktua</div>
       </aside>
 
       {/* Modern Floating Mobile Navbar (Interest Check Version) */}

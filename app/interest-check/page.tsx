@@ -45,19 +45,25 @@ export default function InterestCheckPage() {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="glass-panel overflow-hidden relative shadow-2xl border border-white/10 rounded-[2.5rem]"
         >
-          {/* Height Fixes:
-              - Mobile: h-[550px] so it's not a tiny sliver.
-              - Desktop: aspect-video (16:9) for the perfect monitor fit.
-          */}
-          <div className="h-[550px] md:h-auto md:aspect-video w-full bg-black/20">
-            <iframe
-              title="Hacktua Prototype"
-              className="w-full h-full border-none"
-              src={embedUrl}
-              allowFullScreen
-              loading="lazy"
-            />
-          </div>
+        <div className="glass-panel overflow-hidden relative shadow-2xl border border-white/10 rounded-[2.5rem] bg-[#050505]">
+  {/* 1. THE WRAPPER: Limits the height.
+      2. THE SCALER: This div is actually 125% bigger than the container, 
+         then scaled down to 80% (which creates the 'zoom out' effect).
+  */}
+  <div className="h-[600px] md:h-[750px] w-full overflow-hidden relative">
+    <iframe
+      title="hacktua prototype"
+      className="absolute top-0 left-0 w-[125%] h-[125%] border-none origin-top-left"
+      style={{ 
+        transform: 'scale(0.8)', // Adjust this (0.7, 0.6) to zoom out further
+        width: '125%',           // Must be 1/scale (e.g., 1 / 0.8 = 1.25)
+        height: '125%' 
+      }}
+      src="https://embed.figma.com/proto/AlGmA9PoCRQs4Y0IpKqSNV/step-zero-ui-ux?page-id=0%3A1&node-id=91-1852&p=f&viewport=243%2C93%2C0.07&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=7%3A2&embed-host=share"
+      allowFullScreen
+    />
+  </div>
+      </div>
         </motion.div>
         <div className="mt-8 align-center text-center opacity-30">
           <span className="text-[10px] uppercase tracking-[0.3em] text-white">v1.0.2 // build_stable</span>

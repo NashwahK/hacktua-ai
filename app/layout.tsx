@@ -8,6 +8,11 @@ export const metadata = {
   icons: { icon: '/assets/hacktua-white.png' },
 };
 
+export const viewport = {
+  themeColor: "#000000",
+  viewportFit: "cover",
+};
+
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400','500','600','700'],
@@ -18,7 +23,7 @@ const poppins = Poppins({
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={poppins.variable}>
-      <body className="font-poppins text-white min-h-screen flex flex-col bg-[#000]">
+      <body className="font-poppins text-white min-h-screen flex flex-col">
         {/* Sidebar/Navbar MUST be outside the flex-1 div to stay fixed correctly */}
         {children}
         <Footer />

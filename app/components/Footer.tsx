@@ -60,7 +60,7 @@ export default function Footer() {
 
           <div className="text-white/40 text-sm text-center md:text-right">
 
-            © 2025 hacktua. built with caffeine and code.
+            © 2026 hacktua. built with caffeine and code.
 
           </div>
 

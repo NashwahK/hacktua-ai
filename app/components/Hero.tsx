@@ -57,7 +57,7 @@ export default function Hero() {
               window.location.href = "/interest-check"; 
             }}
           >
-            interest check
+            proof of concept
           </motion.button>
         </motion.div>
 
