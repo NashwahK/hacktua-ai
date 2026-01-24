@@ -19,9 +19,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={poppins.variable}>
       <body className="font-poppins text-white min-h-screen flex flex-col bg-[#000]">
-        <div className="flex-1 flex flex-col w-full">
-          {children}
-        </div>
+        {/* Sidebar/Navbar MUST be outside the flex-1 div to stay fixed correctly */}
+        {children}
         <Footer />
       </body>
     </html>

@@ -1,94 +1,132 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Menu, Close, ArrowBack } from "@mui/icons-material";
+import { useState, useEffect, useRef } from "react";
+import { Menu, Close } from "@mui/icons-material";
 import Link from "next/link";
 
 export default function InterestSidebar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [pinnedAboveFooter, setPinnedAboveFooter] = useState(false);
+  const [absTop, setAbsTop] = useState<number | null>(null);
+  const asideRef = useRef<HTMLElement | null>(null);
 
-  // Change navbar style on scroll (mobile)
+  // Scroll logic for navbar morphing and desktop pinning
   useEffect(() => {
-    const navbar = document.getElementById("mobile-navbar");
     const handleScroll = () => {
-      if (!navbar) return;
-      const scrollY = window.scrollY;
-      if (scrollY > 10) {
-        navbar.style.backgroundColor = "rgba(255,255,255,0.1)";
-        navbar.style.backdropFilter = "blur(8px)";
+      // 1. Mobile Navbar Morphing
+      setIsScrolled(window.scrollY > 20);
+
+      // 2. Desktop Sidebar Pinning
+      const footer = document.querySelector("footer");
+      const aside = asideRef.current;
+      if (!footer || !aside) return;
+
+      const footerTop = footer.getBoundingClientRect().top + window.scrollY;
+      const sidebarHeight = aside.getBoundingClientRect().height;
+      const viewportBottom = window.scrollY + window.innerHeight;
+
+      if (viewportBottom >= footerTop) {
+        setPinnedAboveFooter(true);
+        setAbsTop(footerTop - sidebarHeight - 40);
       } else {
-        navbar.style.backgroundColor = "rgba(255,255,255,0)";
-        navbar.style.backdropFilter = "blur(0px)";
+        setPinnedAboveFooter(false);
+        setAbsTop(null);
       }
     };
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll);
+    handleScroll();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
   }, []);
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex fixed left-8 top-1/2 transform -translate-y-1/2 flex-col justify-between z-20 pointer-events-auto bg-transparent">
-        <div className="space-y-8">
-          <img src="/assets/Hacktua White.png" alt="Hacktua" className="w-32" />
-          <nav className="flex flex-col gap-6 text-white font-semibold text-lg">
-            <span className="text-[#7BADE2] font-bold">proof of concept</span>
+      {/* Desktop Sidebar (Left side) */}
+      <aside
+        ref={(el) => { asideRef.current = el; }}
+        className="hidden md:flex flex-col justify-between pointer-events-auto z-40"
+        style={
+          pinnedAboveFooter
+            ? { position: "absolute", left: 48, top: absTop ?? undefined }
+            : { position: "fixed", left: 48, top: "50%", transform: "translateY(-50%)" }
+        }
+      >
+        <div className="space-y-12">
+          <Link href="/">
+            <img src="/assets/Hacktua White.png" alt="hacktua" className="w-24 hover:opacity-70 transition-opacity" />
+          </Link>
+          <nav className="flex flex-col gap-8 font-london lowercase tracking-tighter text-xl">
+            <span className="text-[#7BADE2] tracking-[0.2em] text-sm">proof of concept</span>
             <Link
               href="/"
-              className="transition-colors hover:text-[#7BADE2] font-normal text-white/80"
+              className="text-white/40 hover:text-white transition-colors"
             >
-              back
+              ← back
             </Link>
           </nav>
         </div>
-        <div className="text-white/50 text-sm mt-6">&copy; 2025 hacktua</div>
+        <div className="text-white/20 text-[10px] tracking-[0.3em] lowercase">&copy; 2025 hacktua</div>
       </aside>
 
-      {/* Mobile Top Bar */}
+      {/* Modern Floating Mobile Navbar (Interest Check Version) */}
       <div
-        className={`md:hidden fixed top-0 left-0 right-0 z-30 transition-colors duration-300`}
-        style={{
-          backgroundColor: `rgba(255,255,255,0)`,
-          backdropFilter: "blur(0px)",
-        }}
         id="mobile-navbar"
+        className={`md:hidden fixed left-0 right-0 z-[100] transition-all duration-500 ease-in-out px-6
+          ${isScrolled 
+            ? "top-4 mx-4 h-14 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg" 
+            : "top-0 h-20 bg-transparent border-transparent"
+          }`}
       >
-        <div className="flex justify-between items-center w-full px-6 py-4">
-          <img src="/assets/Hacktua White.png" alt="Hacktua" className="w-20 max-w-full" />
+        <div className="flex justify-between items-center h-full w-full">
+          <img src="/assets/Hacktua White.png" alt="hacktua" className="h-4 w-auto" />
+          
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="text-white p-2 text-2xl focus:outline-none"
+            className="text-white focus:outline-none"
           >
-            {menuOpen ? <Close fontSize="large" /> : <Menu fontSize="large" />}
+            {menuOpen ? <Close fontSize="medium" /> : <Menu fontSize="medium" />}
           </button>
         </div>
       </div>
 
-      {/* Dimmed overlay when menu open */}
-      {menuOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 z-20"
-          onClick={() => setMenuOpen(false)}
-        ></div>
-      )}
-
-      {/* Mobile Dropdown Menu */}
+      {/* Glossy Dropdown Menu */}
       <div
-        className={`md:hidden fixed top-0 left-0 right-0 overflow-hidden transition-max-h duration-300 z-30 ${
-          menuOpen ? "max-h-screen" : "max-h-0"
+        className={`md:hidden fixed inset-0 z-[90] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+          menuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
         }`}
       >
-        <div className="bg-white backdrop-blur-xl flex flex-col items-start py-12 px-6 gap-6 rounded-b-3xl">
-          <span className="text-lg font-bold text-[#7BADE2]">proof of concept</span>
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-3xl flex flex-col items-center justify-center gap-12 border-b border-white/10">
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-[#7BADE2] font-london text-sm tracking-[0.4em] lowercase">status</span>
+            <span className="text-white font-london text-2xl tracking-widest lowercase">proof of concept</span>
+          </div>
+
           <Link
             href="/"
             onClick={() => setMenuOpen(false)}
-            className="text-lg font-semibold text-black/80 hover:text-[#7BADE2]"
+            className="text-white font-london text-4xl tracking-tighter hover:opacity-50 transition-opacity lowercase"
           >
-            back
+            back to home
           </Link>
+
+          <div className="absolute bottom-12 flex flex-col items-center gap-4 opacity-20">
+             <img src="/assets/Hacktua White.png" alt="hacktua" className="h-4" />
+          </div>
         </div>
       </div>
+
+      {/* Background Dimmer */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-[80] md:hidden backdrop-blur-sm"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
     </>
   );
 }

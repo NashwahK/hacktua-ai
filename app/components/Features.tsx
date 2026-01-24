@@ -1,64 +1,69 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 
 const features = [
   {
     title: "bridging self-assessment and care",
-    description:
-      "connecting evidence-based self-assessment tools with certified mental healthcare provisions.",
+    description: "connecting evidence-based tools with certified mental healthcare provisions.",
     icon: "/assets/brain-w.png",
+    className: "md:col-span-2",
   },
   {
-    title: "LLM-powered user profiling",
-    description:
-      "developing an LLM informed by DSM-5 criteria and personality models for accurate user profiling.",
+    title: "probabilistic profiling",
+    description: "heuristic bayesian networks informed by the DSM-5.",
     icon: "/assets/ai-w.png",
+    className: "md:col-span-1",
   },
   {
     title: "gearing up for global certification",
-    description:
-      "designed to meet standards for international medical certification and practice.",
+    description: "designed for international medical certification and practice.",
     icon: "/assets/globe-w.png",
+    className: "md:col-span-3",
   },
 ];
 
 export default function Features() {
-  const [loaded, setLoaded] = useState(false);
-  useEffect(() => setLoaded(true), []);
-
   return (
-    <section
-    id="features"
-    className="w-full flex flex-col gap-16 py-16 md:py-32 px-6 md:px-0 items-center"
-  >
-    <h2 className="font-london text-4xl md:text-5xl text-white text-center mb-12">
-      features
-    </h2>
+    <section id="features" className="w-full py-24 bg-transparent">
+      <h2 className="font-london text-4xl text-white text-center mb-16 tracking-tight">
+        features
+      </h2>
 
-    <div className="flex flex-col md:flex-row gap-6 w-full max-w-6xl items-center md:justify-center">
-      {features.map((feature, idx) => (
-        <motion.div
-          key={feature.title}
-          initial={{ opacity: 0, y: 20 }}
-          animate={loaded ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.2 * idx, duration: 0.6 }}
-          className="glass-panel flex flex-col items-center text-center p-6 gap-4 w-full md:w-[30%]"
-        >
-          <div className="w-20 h-20 mb-4">
-            <img
-              src={feature.icon}
-              alt={feature.title}
-              className="w-full h-full object-contain"
-            />
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {features.map((feature, idx) => (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: idx * 0.1 }}
+            className={`
+              glass-panel group relative p-8 flex flex-col items-start 
+              transition-all duration-500 hover:bg-white/10
+              ${feature.className}
+            `}
+          >
+            {/* Icon - Restored & Artsy */}
+            <div className="w-12 h-12 mb-6 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+              <img
+                src={feature.icon}
+                alt={feature.title}
+                className="w-full h-full object-contain brightness-0 invert" // Ensures white icons pop on the light bg
+              />
+            </div>
 
-          <h3 className="font-london text-2xl text-white">{feature.title}</h3>
-          <p className="text-white/90 text-base">{feature.description}</p>
-        </motion.div>
-      ))}
-    </div>
-  </section>
-
+            <div className="mt-auto">
+              <h3 className="font-london text-2xl text-white mb-3">
+                {feature.title}
+              </h3>
+              <p className="text-white/80 text-base leading-relaxed max-w-md">
+                {feature.description}
+              </p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
   );
 }

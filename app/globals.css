@@ -1,57 +1,143 @@
 @tailwind base;
+
 @tailwind components;
+
 @tailwind utilities;
 
+
+
 /* Optional: Londoners font */
+
 @font-face {
+
   font-family: 'Londoners';
+
   src: url('/fonts/Londoners.ttf') format('truetype');
+
   font-weight: normal;
+
   font-style: normal;
+
 }
 
+
+
 body {
+
   @apply font-poppins;
+
   background-image: url('/assets/web-bg.png');
+
   background-size: cover;
+
   background-position: center;
+
   background-repeat: no-repeat;
 
 }
 
+
+
+
+
+/* Scale whole site down to 80% visually while compensating width so layout fits
+
+   (scale factor and compensation are intentionally paired: width = 1/scale). */
+
+/* .site-scale-wrapper removed (reverted) */
+
+/* Background used for pages where the content scrolls inside a container
+
+   (we apply this class to the main scroll container so the gradient image
+
+   can span vertically across sections while scrolling). */
+
+/* .site-bg class removed as per the patch request */
+
+
+
 .glass-panel {
+
   background: rgba(255, 255, 255, 0.05);
+
   backdrop-filter: blur(15px);
+
   border-radius: 2rem;
+
   border: 1px solid rgba(255, 255, 255, 0.2);
+
   
+
 }
+
 .glass-panel-footer {
+
   background: rgba(255, 255, 255, 0.05);
+
   backdrop-filter: blur(15px);
+
   border-top-left-radius: 2rem;
+
   border-top-right-radius: 2rem;
+
   border: 1px solid rgba(255, 255, 255, 0.2);
+
   
+
 }
+
+
 
 .scrollbar-thin {
+
   scrollbar-width: thin; /* Firefox */
+
   scrollbar-color: #7BADE2 #EBF5FF; 
+
 }
+
+
 
 .scrollbar-thin::-webkit-scrollbar {
+
   width: 6px; /* Chrome, Edge */
+
   border-radius: 9999px;
+
 }
+
+
 
 .scrollbar-thin::-webkit-scrollbar-track {
+
   background: #EBF5FF;
+
   border-radius: 9999px;
+
 }
 
+
+
 .scrollbar-thin::-webkit-scrollbar-thumb {
+
   background-color: #7BADE2;
+
   border-radius: 9999px;
+
   border: 2px solid #EBF5FF;
+
 }
+/* Force the mobile navbar to the absolute front */
+#mobile-navbar {
+  z-index: 99999 !important;
+  position: fixed !important;
+}
+
+/* Ensure the dropdown menu is also in front */
+.md\:hidden.fixed.top-0 {
+  z-index: 9998 !important;
+}
+
+
+/* No snap scroll rules (reverted). */
+

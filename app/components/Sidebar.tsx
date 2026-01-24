@@ -9,10 +9,12 @@ const sections = ["hero", "features", "mission", "cta"];
 export default function Sidebar() {
   const [active, setActive] = useState("hero");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // Track scroll position for active section (desktop)
+  // Track scroll position for active section and navbar styling
   useEffect(() => {
     const handleScroll = () => {
+      // 1. Update Active Section
       const scrollPos = window.scrollY + window.innerHeight / 3;
       for (const section of sections) {
         const el = document.getElementById(section);
@@ -20,23 +22,12 @@ export default function Sidebar() {
           setActive(section);
         }
       }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
-  // Change navbar style on scroll (mobile)
-  useEffect(() => {
-    const navbar = document.getElementById("mobile-navbar");
-    const handleScroll = () => {
-      if (!navbar) return;
-      const scrollY = window.scrollY;
-      if (scrollY > 10) {
-        navbar.style.backgroundColor = "rgba(255,255,255,0.1)";
-        navbar.style.backdropFilter = "blur(8px)";
+      // 2. Modern Navbar Transformation
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
       } else {
-        navbar.style.backgroundColor = "rgba(255,255,255,0)";
-        navbar.style.backdropFilter = "blur(0px)";
+        setIsScrolled(false);
       }
     };
     window.addEventListener("scroll", handleScroll);
@@ -45,98 +36,73 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex fixed left-8 top-1/2 transform -translate-y-1/2 flex-col justify-between z-20 pointer-events-auto bg-transparent">
-        <div className="space-y-8">
-          <img src="/assets/Hacktua White.png" alt="Hacktua" className="w-32" />
-          <nav className="flex flex-col gap-6 text-white font-semibold text-lg">
+      {/* Desktop Sidebar (Left side) */}
+      <aside className="hidden md:flex fixed left-12 top-1/2 transform -translate-y-1/2 flex-col justify-between h-[70vh] z-40 pointer-events-auto bg-transparent">
+        <div className="space-y-12">
+          <img src="/assets/Hacktua White.png" alt="hacktua" className="w-24" />
+          <nav className="flex flex-col gap-8 font-london lowercase tracking-tighter text-xl">
             {sections.map((section) => (
               <a
                 key={section}
                 href={`#${section}`}
-                className={`transition-colors hover:text-[#7BADE2] ${
-                  active === section
-                    ? "font-bold text-[#7BADE2]"
-                    : "font-normal text-white/80"
+                className={`transition-all duration-300 hover:text-[#7BADE2] ${
+                  active === section ? "text-[#7BADE2] scale-110 origin-left" : "text-white/40"
                 }`}
               >
-                {section === "hero"
-                  ? "hacktua"
-                  : section === "cta"
-                  ? "join us"
-                  : section.charAt(0) + section.slice(1)}
+                {section === "hero" ? "hacktua" : section === "cta" ? "join us" : section}
               </a>
             ))}
-            {/* PoC / Interest Check link */}
-            <Link
-              href="/interest-check"
-              className="transition-colors hover:text-[#7BADE2] font-normal text-white/80"
-            >
+            <Link href="/interest-check" className="text-white/40 transition-colors hover:text-[#7BADE2]">
               interest check
             </Link>
           </nav>
         </div>
-        <div className="text-white/50 text-sm mt-6">&copy; 2025 hacktua</div>
+        <div className="text-white/20 text-[10px] tracking-[0.3em] lowercase">&copy; 2025 hacktua</div>
       </aside>
 
-      {/* Mobile Top Bar */}
+      {/* Modern Floating Mobile Navbar */}
       <div
-        className={`md:hidden fixed top-0 left-0 right-0 z-30 transition-colors duration-300`}
-        style={{
-          backgroundColor: `rgba(255,255,255,0)`,
-          backdropFilter: "blur(0px)",
-        }}
         id="mobile-navbar"
+        className={`md:hidden fixed left-0 right-0 z-[100] transition-all duration-500 ease-in-out px-6
+          ${isScrolled 
+            ? "top-4 mx-4 h-14 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg" 
+            : "top-0 h-20 bg-transparent border-transparent"
+          }`}
       >
-        <div className="flex justify-between items-center w-full px-6 py-4">
-          <img src="/assets/Hacktua White.png" alt="Hacktua" className="w-20 max-w-full" />
+        <div className="flex justify-between items-center h-full w-full">
+          <img src="/assets/Hacktua White.png" alt="hacktua" className="h-4 w-auto" />
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="text-white p-2 text-2xl focus:outline-none"
+            className="text-white focus:outline-none p-1"
           >
-            {menuOpen ? <Close fontSize="large" /> : <Menu fontSize="large" />}
+            {menuOpen ? <Close fontSize="medium" /> : <Menu fontSize="medium" />}
           </button>
         </div>
       </div>
 
-      {/* Dimmed overlay when menu open */}
-      {menuOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 z-20"
-          onClick={() => setMenuOpen(false)}
-        ></div>
-      )}
-
-      {/* Mobile Dropdown Menu */}
+      {/* Mobile Dropdown - Glossy Glass */}
       <div
-        className={`md:hidden fixed top-0 left-0 right-0 overflow-hidden transition-max-h duration-300 z-30 ${
-          menuOpen ? "max-h-screen" : "max-h-0"
+        className={`md:hidden fixed inset-0 z-[90] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+          menuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
         }`}
       >
-        <div className="bg-white backdrop-blur-xl flex flex-col items-start py-12 px-6 gap-6 rounded-b-3xl">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-3xl flex flex-col items-center justify-center gap-10 border-b border-white/10">
           {sections.map((section) => (
             <a
               key={section}
               href={`#${section}`}
               onClick={() => setMenuOpen(false)}
-              className={`text-lg font-semibold transition-colors ${
-                active === section
-                  ? "text-[#7BADE2]"
-                  : "text-black/80 hover:text-[#7BADE2]"
+              className={`text-3xl font-london lowercase tracking-tighter transition-colors ${
+                active === section ? "text-[#7BADE2]" : "text-white"
               }`}
             >
-              {section === "hero"
-                ? "hacktua"
-                : section === "cta"
-                ? "join us"
-                : section.charAt(0) + section.slice(1)}
+              {section === "hero" ? "hacktua" : section === "cta" ? "join us" : section}
             </a>
           ))}
-          {/* Mobile PoC / Interest Check link */}
           <Link
             href="/interest-check"
             onClick={() => setMenuOpen(false)}
-            className="text-lg font-semibold text-black/80 hover:text-[#7BADE2]"
+            className="text-3xl font-london lowercase tracking-tighter text-white/60 pt-4 border-t border-white/10 w-40 text-center"
           >
             interest check
           </Link>
