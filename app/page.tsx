@@ -10,7 +10,7 @@ export default function Home() {
       
       <Sidebar />
 
-      <main className="flex-1 flex flex-col w-full md:pl-0 
+      <main className="flex-1 flex flex-col w-full md:pl-64 
                        pt-[env(safe-area-inset-top)] 
                        pb-[env(safe-area-inset-bottom)]">
         

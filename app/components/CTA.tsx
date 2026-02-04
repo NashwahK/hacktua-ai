@@ -164,31 +164,11 @@ export default function CTA() {
 
             disabled={status === "loading"}
 
-            className={`
-
-              relative px-8 py-4 rounded-full bg-white text-[#1063B1] font-semibold
-
-              overflow-hidden transition-transform
-
-              ${status === "loading" ? "opacity-50 cursor-not-allowed" : "hover:scale-105"}
-
-            `}
+            className={`relative px-8 py-4 rounded-full bg-white text-[#1063B1] font-semibold transition-transform group ${status === "loading" ? "opacity-50 cursor-not-allowed" : "hover:scale-105 group-hover:pulse-border"}`}
 
           >
 
-            {/* Gradient border effect */}
-
-            <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#336666] via-[#7BADE2] to-[#336699] opacity-0 hover:opacity-100 transition-opacity blur-lg"></span>
-
-
-
-            {/* Inner content */}
-
-            <span className="relative z-10">
-
-              {status === "loading" ? "Sending..." : "count me in!"}
-
-            </span>
+            {status === "loading" ? "Sending..." : "count me in!"}
 
           </button>
 
