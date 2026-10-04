@@ -87,7 +87,6 @@ export default function AssessmentDemo() {
   const [questionId, setQuestionId] = useState<string | null>(null);
   const [history, setHistory] = useState<ChatEntry[]>([]);
   const [submitting, setSubmitting] = useState(false);
-  const [showTyping, setShowTyping] = useState(false);
   const [openText, setOpenText] = useState("");
   const [likertVal, setLikertVal] = useState(1);
   const [siSeverity, setSiSeverity] = useState(1);
@@ -97,7 +96,7 @@ export default function AssessmentDemo() {
 
   useEffect(() => {
     if (containerRef.current) containerRef.current.scrollTop = containerRef.current.scrollHeight;
-  }, [history, phase, showTyping]);
+  }, [history, phase, submitting]);
 
   const isBinary = questionId ? BINARY_QUESTIONS.has(questionId) : false;
   const isSI = questionId ? SI_QUESTIONS.has(questionId) : false;
@@ -107,6 +106,11 @@ export default function AssessmentDemo() {
   const qText = questionId ? QUESTION_TEXTS[questionId] ?? questionId : "";
 
   // ── Advance to whatever the backend says is next ──────────────────────────
+  // `submitting` stays true continuously from the moment a question is
+  // answered until the next thing is actually ready to show -- that's
+  // what keeps the old question from sitting there frozen during the
+  // network wait. Each branch below is responsible for flipping it back
+  // off itself, right as it reveals whatever comes next.
   function applyResult(result: {
     next_question_id: string | null;
     session_complete: boolean;
@@ -115,20 +119,24 @@ export default function AssessmentDemo() {
     setReport(result.report);
     if (result.next_question_id === "SAFETY_PROTOCOL") {
       setPhase("safety");
+      setSubmitting(false);
       return;
     }
     if (result.session_complete || !result.next_question_id) {
       setPhase("results");
+      setSubmitting(false);
       return;
     }
-    setShowTyping(true);
+    // Hold the typing indicator a little past when the real response
+    // actually arrived -- reveals the next question like a reply being
+    // composed, instead of an instant swap.
     setTimeout(() => {
-      setShowTyping(false);
       setQuestionId(result.next_question_id);
       setOpenText("");
       setLikertVal(1);
       setPhase("question");
-    }, 500);
+      setSubmitting(false);
+    }, 450);
   }
 
   async function handleSeedSubmit() {
@@ -137,17 +145,15 @@ export default function AssessmentDemo() {
     try {
       const res = await createSession(seedText);
       setSessionId(res.session_id);
-      setShowTyping(true);
       setTimeout(() => {
-        setShowTyping(false);
         setQuestionId(res.first_question_id);
         setPhase("question");
-      }, 500);
+        setSubmitting(false);
+      }, 450);
     } catch (e) {
       console.error("createSession failed:", e);
       setErrorMsg("Couldn't start the assessment. Please try again in a moment.");
       setPhase("error");
-    } finally {
       setSubmitting(false);
     }
   }
@@ -158,7 +164,7 @@ export default function AssessmentDemo() {
     setHistory(h => [...h, { question: qText, answerLabel }]);
     try {
       const result = await submitResponse({ sessionId, questionId, rawValue, responseType });
-      applyResult(result);
+      applyResult(result); // manages its own setSubmitting(false) timing
     } catch (e) {
       console.error("submitResponse failed:", e);
       // An ideation "yes" failing to submit should fail safe to the
@@ -169,9 +175,22 @@ export default function AssessmentDemo() {
         setErrorMsg("Something went wrong submitting that. Please try again.");
         setPhase("error");
       }
-    } finally {
       setSubmitting(false);
     }
+  }
+
+  function resetAll() {
+    setPhase("seed");
+    setSeedText("");
+    setSessionId(null);
+    setQuestionId(null);
+    setHistory([]);
+    setSubmitting(false);
+    setOpenText("");
+    setLikertVal(1);
+    setSiSeverity(1);
+    setErrorMsg("");
+    setReport(null);
   }
 
   async function submitSiFollowup() {
@@ -190,7 +209,14 @@ export default function AssessmentDemo() {
       ref={containerRef}
       className="glass-panel bg-[#0E2430]/70 max-w-xl mx-auto p-6 flex flex-col gap-4 rounded-glass shadow-glass overflow-y-auto max-h-[80vh] relative"
     >
-      <h2 className="font-london text-2xl text-white mb-2 text-center">step[0] — try it</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="font-london text-2xl text-white">step[0] — try it</h2>
+        {phase !== "seed" && (
+          <button onClick={resetAll} className="text-xs text-white/50 hover:text-white underline">
+            start over
+          </button>
+        )}
+      </div>
       <p className="text-white/50 text-xs text-center -mt-2 mb-2">
         this is the real assessment engine, not a simulation. responses aren&apos;t saved to your profile.
       </p>
@@ -210,16 +236,20 @@ export default function AssessmentDemo() {
           ))}
         </AnimatePresence>
 
-        {showTyping && (
-          <div className="self-start flex items-center gap-2 bg-brand-6 p-3 rounded-lg max-w-[40%]">
+        {submitting && (phase === "seed" || phase === "question" || phase === "si_followup") && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="self-start flex items-center gap-2 bg-brand-6 p-3 rounded-lg max-w-[40%]"
+          >
             <span className="w-2 h-2 rounded-full bg-white animate-bounce" />
             <span className="w-2 h-2 rounded-full bg-white animate-bounce delay-200" />
             <span className="w-2 h-2 rounded-full bg-white animate-bounce delay-400" />
-          </div>
+          </motion.div>
         )}
 
         {/* ── Seed ── */}
-        {phase === "seed" && !showTyping && (
+        {phase === "seed" && !submitting && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-2">
             <div className="self-start bg-brand-6 text-white p-3 rounded-lg max-w-[85%] text-sm">what&apos;s been bothering you?</div>
             <div className="flex items-center gap-2 mt-1">
@@ -244,7 +274,7 @@ export default function AssessmentDemo() {
         )}
 
         {/* ── Question ── */}
-        {phase === "question" && !showTyping && questionId && (
+        {phase === "question" && !submitting && questionId && (
           <motion.div key={questionId} initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col gap-3">
             <div className="self-start bg-brand-6 text-white p-3 rounded-lg max-w-[85%] text-sm">{qText}</div>
 
@@ -327,7 +357,7 @@ export default function AssessmentDemo() {
         )}
 
         {/* ── SI severity follow-up ── */}
-        {phase === "si_followup" && (
+        {phase === "si_followup" && !submitting && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-3">
             <div className="self-start bg-brand-6 text-white p-3 rounded-lg max-w-[85%] text-sm">how often would you say these thoughts come up?</div>
             <input type="range" min={0} max={3} step={1} value={siSeverity} onChange={e => setSiSeverity(Number(e.target.value))} className="w-full accent-brand-5" />
