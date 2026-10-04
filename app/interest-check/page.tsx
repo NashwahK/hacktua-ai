@@ -2,11 +2,10 @@
 
 import React from "react";
 import InterestSidebar from "../components/InterestSidebar";
+import AssessmentDemo from "../components/AssessmentDemo";
 import { motion } from "framer-motion";
 
 export default function InterestCheckPage() {
-  const embedUrl = "https://embed.figma.com/proto/AlGmA9PoCRQs4Y0IpKqSNV/step-zero-ui-ux?page-id=0%3A1&node-id=91-1852&p=f&viewport=243%2C93%2C0.07&scaling=scale-down&content-scaling=fixed&starting-point-node-id=7%3A2&embed-host=share";
-
   return (
     /* flex-col for mobile, flex-row for desktop to get the side-by-side look */
     <div className="relative flex flex-col md:flex-row w-full min-h-screen bg-transparent">
@@ -38,32 +37,14 @@ export default function InterestCheckPage() {
           </p>
         </motion.div>
 
-        {/* The Figma Component Wrapper */}
-        <motion.div 
+        {/* The real assessment engine — same backend as the mobile app,
+            not a Figma prototype or a scripted simulation. */}
+        <motion.div
           initial={{ opacity: 0, scale: 0.99 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="glass-panel overflow-hidden relative shadow-2xl border border-white/10 rounded-[2.5rem]"
         >
-        <div className="glass-panel overflow-hidden relative shadow-2xl border border-white/10 rounded-[2.5rem] bg-[#050505]">
-  {/* 1. THE WRAPPER: Limits the height.
-      2. THE SCALER: This div is actually 125% bigger than the container, 
-         then scaled down to 80% (which creates the 'zoom out' effect).
-  */}
-  <div className="h-[600px] md:h-[750px] w-full overflow-hidden relative">
-    <iframe
-      title="hacktua prototype"
-      className="absolute top-0 left-0 w-[125%] h-[125%] border-none origin-top-left"
-      style={{ 
-        transform: 'scale(0.8)', // Adjust this (0.7, 0.6) to zoom out further
-        width: '125%',           // Must be 1/scale (e.g., 1 / 0.8 = 1.25)
-        height: '125%' 
-      }}
-      src="https://embed.figma.com/proto/AlGmA9PoCRQs4Y0IpKqSNV/step-zero-ui-ux?page-id=0%3A1&node-id=91-1852&p=f&viewport=243%2C93%2C0.07&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=7%3A2&embed-host=share"
-      allowFullScreen
-    />
-  </div>
-      </div>
+          <AssessmentDemo />
         </motion.div>
         <div className="mt-8 align-center text-center opacity-30">
           <span className="text-[10px] uppercase tracking-[0.3em] text-white">v1.0.2 // build_stable</span>
