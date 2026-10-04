@@ -205,10 +205,7 @@ export default function AssessmentDemo() {
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="glass-panel bg-[#0E2430]/70 max-w-xl mx-auto p-6 flex flex-col gap-4 rounded-glass shadow-glass overflow-y-auto max-h-[80vh] relative"
-    >
+    <div className="glass-panel bg-[#0E2430]/70 max-w-xl mx-auto p-6 flex flex-col gap-4 rounded-glass shadow-glass relative">
       <div className="flex items-center justify-between">
         <h2 className="font-london text-2xl text-white">step[0] — try it</h2>
         {phase !== "seed" && (
@@ -221,7 +218,10 @@ export default function AssessmentDemo() {
         this is the real assessment engine, not a simulation. responses aren&apos;t saved to your profile.
       </p>
 
-      <div className="flex flex-col gap-4">
+      <div
+        ref={containerRef}
+        className="bg-[#F4F7FA] rounded-2xl p-5 flex flex-col gap-4 overflow-y-auto max-h-[65vh]"
+      >
         <AnimatePresence initial={false}>
           {history.map((h, idx) => (
             <motion.div
@@ -259,7 +259,7 @@ export default function AssessmentDemo() {
                 onChange={e => setSeedText(e.target.value)}
                 onKeyDown={e => { if (e.key === "Enter") handleSeedSubmit(); }}
                 placeholder="share what comes to mind..."
-                className="flex-1 p-3 rounded-lg text-black text-sm"
+                className="flex-1 p-3 rounded-lg text-black text-sm border border-[#1F3A3D]/15"
                 autoFocus
               />
               <button
@@ -281,14 +281,14 @@ export default function AssessmentDemo() {
             {isBinary && !isSI && (
               <div className="flex gap-2">
                 <button onClick={() => submit("yes", "binary", "yes")} disabled={submitting} className="px-5 py-2 rounded-lg bg-brand-5 text-white font-medium hover:scale-105 transition-transform">yes</button>
-                <button onClick={() => submit("no", "binary", "no")} disabled={submitting} className="px-5 py-2 rounded-lg bg-white text-black font-medium hover:scale-105 transition-transform">no</button>
+                <button onClick={() => submit("no", "binary", "no")} disabled={submitting} className="px-5 py-2 rounded-lg bg-white text-[#1F3A3D] border border-[#1F3A3D]/15 font-medium hover:scale-105 hover:bg-[#1F3A3D]/5 transition-all">no</button>
               </div>
             )}
 
             {isBinary && isSI && (
               <div className="flex gap-2">
                 <button onClick={() => setPhase("si_followup")} disabled={submitting} className="px-5 py-2 rounded-lg bg-brand-5 text-white font-medium hover:scale-105 transition-transform">yes</button>
-                <button onClick={() => submit("no", "binary", "no")} disabled={submitting} className="px-5 py-2 rounded-lg bg-white text-black font-medium hover:scale-105 transition-transform">no</button>
+                <button onClick={() => submit("no", "binary", "no")} disabled={submitting} className="px-5 py-2 rounded-lg bg-white text-[#1F3A3D] border border-[#1F3A3D]/15 font-medium hover:scale-105 hover:bg-[#1F3A3D]/5 transition-all">no</button>
               </div>
             )}
 
@@ -297,7 +297,7 @@ export default function AssessmentDemo() {
               return (
                 <div className="flex gap-2">
                   <button onClick={() => submit(d.yesValue, "duration_probe", d.yesLabel)} disabled={submitting} className="px-5 py-2 rounded-lg bg-brand-5 text-white font-medium hover:scale-105 transition-transform">{d.yesLabel}</button>
-                  <button onClick={() => submit(d.noValue, "duration_probe", d.noLabel)} disabled={submitting} className="px-5 py-2 rounded-lg bg-white text-black font-medium hover:scale-105 transition-transform">{d.noLabel}</button>
+                  <button onClick={() => submit(d.noValue, "duration_probe", d.noLabel)} disabled={submitting} className="px-5 py-2 rounded-lg bg-white text-[#1F3A3D] border border-[#1F3A3D]/15 font-medium hover:scale-105 hover:bg-[#1F3A3D]/5 transition-all">{d.noLabel}</button>
                 </div>
               );
             })()}
@@ -305,7 +305,7 @@ export default function AssessmentDemo() {
             {isRouting && (
               <div className="flex flex-col gap-2">
                 {ROUTING_OPTIONS.map(opt => (
-                  <button key={opt.value} onClick={() => submit(opt.value, "routing", opt.label)} disabled={submitting} className="px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white text-left hover:bg-white/20 transition-colors">
+                  <button key={opt.value} onClick={() => submit(opt.value, "routing", opt.label)} disabled={submitting} className="px-4 py-2.5 rounded-lg bg-[#1F3A3D]/5 border border-[#1F3A3D]/15 text-[#1F3A3D] text-left hover:bg-[#1F3A3D]/10 transition-colors">
                     {opt.label}
                   </button>
                 ))}
@@ -320,7 +320,7 @@ export default function AssessmentDemo() {
                   onChange={e => setOpenText(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter" && openText.trim()) submit(openText, "open_text", openText); }}
                   placeholder="share what comes to mind..."
-                  className="flex-1 p-3 rounded-lg text-black text-sm"
+                  className="flex-1 p-3 rounded-lg text-black text-sm border border-[#1F3A3D]/15"
                   autoFocus
                 />
                 <button
@@ -340,7 +340,7 @@ export default function AssessmentDemo() {
                   onChange={e => setLikertVal(Number(e.target.value))}
                   className="w-full accent-brand-5"
                 />
-                <div className="flex justify-between text-[11px] text-white/50">
+                <div className="flex justify-between text-[11px] text-[#5C7478]">
                   <span>not at all</span>
                   <span>all the time</span>
                 </div>
@@ -361,7 +361,7 @@ export default function AssessmentDemo() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-3">
             <div className="self-start bg-brand-6 text-white p-3 rounded-lg max-w-[85%] text-sm">how often would you say these thoughts come up?</div>
             <input type="range" min={0} max={3} step={1} value={siSeverity} onChange={e => setSiSeverity(Number(e.target.value))} className="w-full accent-brand-5" />
-            <div className="flex justify-between text-[11px] text-white/50">
+            <div className="flex justify-between text-[11px] text-[#5C7478]">
               <span>passing, rare</span>
               <span>frequent, hard to shake</span>
             </div>
@@ -389,12 +389,14 @@ export default function AssessmentDemo() {
         {/* ── Results ── */}
         {phase === "results" && report && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center gap-4 pt-2">
-            <p className="text-white/60 text-xs uppercase tracking-widest">your shape</p>
-            <BloomChart conditions={report.conditions} />
-            <p className="text-white/50 text-[11px] text-center leading-relaxed max-w-sm">
+            <p className="text-[#5C7478] text-xs uppercase tracking-widest">your shape</p>
+            <div className="bg-[#1a2b33] rounded-2xl p-4">
+              <BloomChart conditions={report.conditions} />
+            </div>
+            <p className="text-[#5C7478] text-[11px] text-center leading-relaxed max-w-sm">
               this is a confidence estimate based on patterns in what you shared — not a clinical diagnosis. a licensed professional can give you the full picture.
             </p>
-            <p className="text-white/40 text-[10px] text-center">
+            <p className="text-[#94A8AB] text-[10px] text-center">
               liked what you saw? this is a small slice of step[0] — the full app adds therapist matching, progress tracking and more.
             </p>
           </motion.div>
@@ -402,8 +404,8 @@ export default function AssessmentDemo() {
 
         {/* ── Error ── */}
         {phase === "error" && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-red-500/20 border border-red-400/30 rounded-lg p-4 text-center">
-            <p className="text-white text-sm">{errorMsg}</p>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+            <p className="text-red-700 text-sm">{errorMsg}</p>
           </motion.div>
         )}
       </div>
