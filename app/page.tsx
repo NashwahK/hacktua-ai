@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import InterestSidebar from "../components/InterestSidebar";
-import AssessmentDemo from "../components/AssessmentDemo";
+import InterestSidebar from "./components/InterestSidebar";
+import AssessmentDemo from "./components/AssessmentDemo";
 import { motion } from "framer-motion";
 
 export default function InterestCheckPage() {
